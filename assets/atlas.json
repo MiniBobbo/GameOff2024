@@ -1,0 +1,230 @@
+{
+	"textures": [
+		{
+			"image": "atlas.png",
+			"format": "RGBA8888",
+			"size": {
+				"w": 664,
+				"h": 502
+			},
+			"scale": 1,
+			"frames": [
+				{
+					"filename": "Walls_0/Left0",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 118,
+						"h": 500
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 118,
+						"h": 500
+					},
+					"frame": {
+						"x": 1,
+						"y": 1,
+						"w": 118,
+						"h": 500
+					}
+				},
+				{
+					"filename": "Walls_0/Right0",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 118,
+						"h": 500
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 118,
+						"h": 500
+					},
+					"frame": {
+						"x": 121,
+						"y": 1,
+						"w": 118,
+						"h": 500
+					}
+				},
+				{
+					"filename": "Walls_0/Wall1",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 264,
+						"h": 264
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 264,
+						"h": 264
+					},
+					"frame": {
+						"x": 241,
+						"y": 1,
+						"w": 264,
+						"h": 264
+					}
+				},
+				{
+					"filename": "Walls_0/Wall3",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 178,
+						"h": 178
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 178,
+						"h": 178
+					},
+					"frame": {
+						"x": 241,
+						"y": 267,
+						"w": 178,
+						"h": 178
+					}
+				},
+				{
+					"filename": "Walls_0/Left2",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 45,
+						"h": 264
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 45,
+						"h": 264
+					},
+					"frame": {
+						"x": 507,
+						"y": 1,
+						"w": 45,
+						"h": 264
+					}
+				},
+				{
+					"filename": "Walls_0/Wall7",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 109,
+						"h": 109
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 109,
+						"h": 109
+					},
+					"frame": {
+						"x": 554,
+						"y": 1,
+						"w": 109,
+						"h": 109
+					}
+				},
+				{
+					"filename": "Walls_0/Wall5",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 138,
+						"h": 138
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 138,
+						"h": 138
+					},
+					"frame": {
+						"x": 421,
+						"y": 267,
+						"w": 138,
+						"h": 138
+					}
+				},
+				{
+					"filename": "Walls_0/Right2",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 45,
+						"h": 264
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 45,
+						"h": 264
+					},
+					"frame": {
+						"x": 561,
+						"y": 112,
+						"w": 45,
+						"h": 264
+					}
+				},
+				{
+					"filename": "Walls_0/Left4",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 21,
+						"h": 178
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 21,
+						"h": 178
+					},
+					"frame": {
+						"x": 608,
+						"y": 112,
+						"w": 21,
+						"h": 178
+					}
+				},
+				{
+					"filename": "Walls_0/Left6",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 15,
+						"h": 138
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 15,
+						"h": 138
+					},
+					"frame": {
+						"x": 631,
+						"y": 112,
+						"w": 15,
+						"h": 138
+					}
+				}
+			]
+		}
+	],
+	"meta": {
+		"app": "https://www.codeandweb.com/texturepacker",
+		"version": "3.0",
+		"smartupdate": "$TexturePacker:SmartUpdate:14ff89a7a221ede262bd227b9b42126d:06fb95afc7319f66047ebc059861dda3:cbce6b53f0f49e0bf15173c25c41f876$"
+	}
+}
