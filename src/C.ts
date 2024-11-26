@@ -29,6 +29,8 @@ export class C {
 
     static GAME_NAME = 'InitialGame';
 
+    static DebugLevel:number = 2;  
+
     static RoundToTile(x:number, y:number):{x:number, y:number} {
         let newX = 0;
         let newY = 0;

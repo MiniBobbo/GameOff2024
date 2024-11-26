@@ -160,7 +160,7 @@ def main():
         raise ValueError("No file selected")
 
     # Read in a .png file
-    BaseImage = Image.open(file_path)
+    BaseImage = Image.open(file_path).convert("RGBA")
 
     #  Get the image name from the filename
     imageName = file_path[file_path.rfind('/')+1:file_path.rfind('.')]
