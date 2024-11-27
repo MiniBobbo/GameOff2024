@@ -17,11 +17,13 @@ export class EntityCombatModel {
 
     Statuses:StatusModel[];
 
+    InBattle:boolean = false;
+
+    Delay:number = 0;
+
     constructor(parent:EntityModel) {
         this.parent = parent;
+        this.Statuses = [];
     }
 
-    ApplyDamage(damage:number, type:AttackType) {
-        this.HP -= damage;
-    }
 }

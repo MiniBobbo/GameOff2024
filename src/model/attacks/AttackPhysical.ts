@@ -1,7 +1,7 @@
 import { AttackModel, AttackType } from "../AttackModel";
 import { EntityModel } from "../EntityModel";
 
-export class Attack_Physical extends AttackModel {
+export class AttackPhysical extends AttackModel {
     constructor(parent:EntityModel) {
         super(parent);
         this.type = AttackType.Physical;
@@ -14,8 +14,10 @@ export class Attack_Physical extends AttackModel {
     }
 
     Launch(models:EntityModel[]) {
-        
-        console.log("Physical Attack Launched");
+        //Get a random target from the models
+        let target = models[Math.floor(Math.random() * models.length)];
+        target.TakeDamage(this.Strength);
+        this.parent.CombatModel.Delay = this.Delay;
     }
 
     Valid(): boolean {

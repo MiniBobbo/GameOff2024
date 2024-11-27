@@ -1,7 +1,8 @@
+import { IBaseModel } from "../interfaces/IBaseModel";
 import { EntityCombatModel } from "./EntityCombatModel";
 import { EntityModel } from "./EntityModel";
 
-export class FilterModel {
+export class FilterModel implements IBaseModel {
     Type:FilterTypes;
     Value:number;
 
