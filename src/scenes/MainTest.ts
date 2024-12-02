@@ -21,6 +21,8 @@ export class MainTest extends Phaser.Scene {
     TickCount:number = 0;
 
     create() {
+
+        let bg = this.add.image(0, 0, 'bg').setOrigin(0, 0).setDisplaySize(800,600);    
         this.p1 = new EntityModel();
         this.p1.Name = 'Player 1';
         this.p1.Side = 1;

@@ -67,6 +67,7 @@ export class Preload extends Phaser.Scene {
         this.load.multiatlas('atlas', 'atlas.json');
         this.load.image('pointer', 'pointer.png');
         this.load.font('munro', 'munro.ttf');
+        this.load.image('bg', 'TestBG.jpg');
     }
 
 
