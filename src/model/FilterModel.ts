@@ -1,10 +1,10 @@
 import { IBaseModel } from "../interfaces/IBaseModel";
 import { EntityCombatModel } from "./EntityCombatModel";
 import { EntityModel } from "./EntityModel";
-import { HoldingSpaceCategory } from "./HoldingSpaceModel";
+import { HoldingSpaceCategory, HoldingSpaceModelType } from "./HoldingSpaceModel";
 
 export class FilterModel implements IBaseModel {
-    Type:FilterTypes;
+    Type:HoldingSpaceModelType;
     Value:number;
 
     parent:EntityModel;
@@ -31,9 +31,4 @@ export class FilterModel implements IBaseModel {
         this.results = '-- Default Filter: ' + models.length + ' models';
         return models;
     }
-}
-
-export enum FilterTypes {
-    HP,
-    HPUnder
 }

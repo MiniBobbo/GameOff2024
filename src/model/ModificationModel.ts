@@ -1,10 +1,10 @@
 import { IBaseModel } from "../interfaces/IBaseModel";
-import { HoldingSpaceCategory } from "./HoldingSpaceModel";
+import { HoldingSpaceCategory, HoldingSpaceModelType } from "./HoldingSpaceModel";
 
 export class ModificationModel implements IBaseModel {
     modelCategory: HoldingSpaceCategory = HoldingSpaceCategory.Modification;
     notes: string;
-    Type:ModificationTypes;
+    Type:HoldingSpaceModelType;
     Value:number;
     Ticks:number;
 
@@ -20,8 +20,4 @@ export class ModificationModel implements IBaseModel {
         throw new Error("Method not implemented.");
     }
 
-}
-
-export enum ModificationTypes {
-    
 }

@@ -59,14 +59,14 @@ export class Preload extends Phaser.Scene {
             percentText.destroy();
             assetText.destroy();
             //@ts-ignore
-            this.scene.start('game');
+            this.scene.start('test');
         }, this);
     
         this.load.setBaseURL('./assets/')
         this.load.json('level', 'levels.ldtk');
         this.load.multiatlas('atlas', 'atlas.json');
         this.load.image('pointer', 'pointer.png');
-        this.load.font('pixel', 'munro.ttf', 'truetype');
+        this.load.font('munro', 'munro.ttf');
     }
 
 

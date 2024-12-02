@@ -2,6 +2,7 @@ import { IBaseModel } from "../interfaces/IBaseModel";
 
 export class HoldingSpaceModel {
     Category:HoldingSpaceCategory;
+    Locked:boolean = true;
     constructor(category:HoldingSpaceCategory, baseModel?:IBaseModel, type:HoldingSpaceType = HoldingSpaceType.Optional) {
         if(baseModel)
             this.BaseModel = baseModel;
@@ -13,13 +14,18 @@ export class HoldingSpaceModel {
     type:HoldingSpaceType = HoldingSpaceType.Optional;
     BaseModel:IBaseModel;
 
-    AddModel(model:IBaseModel) {
+    AddModel(model:IBaseModel, lock:boolean = false) {
         if(model.modelCategory != this.Category) {
             //Do something if we try to put the wrong cetegory in the wrong holding space.  Write to console?
             console.log('Error: Attempted to add a model of the wrong category to a holding space.');
         } else {
             this.BaseModel = model;
+            this.Locked = lock;
         }
+    }
+
+    toString():string {
+        return `T:${this.type}, BaseModel: ${this.BaseModel.Type}`;
     }
 }
 
@@ -34,4 +40,14 @@ export enum HoldingSpaceCategory {
     Effect = 'effect',
     Filter = 'filter',
     Modification = 'modification'
+}
+
+export enum HoldingSpaceModelType {
+    FilterEnemies = 'filterEnemies',
+    FilterAllies = 'filterAllies',
+    FilterHPUnder = 'filterHPUnder',
+    FilterHPOver = 'filterHPOver',
+    EffectPhysical = 'effectPhysical',
+    EffectStrength = 'effectStrength',
+    CriteriaPercentage = 'criteriaPercentage',
 }

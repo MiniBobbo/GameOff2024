@@ -5,6 +5,7 @@ import { C } from "./C";
 import { GameData } from "./GameData";
 import { MainMenuScene } from "./scenes/MainMenuScene";
 import { UnitTestScene } from "./scenes/UnitTestScene";
+import { MainTest } from "./scenes/MainTest";
 
 
 class Main extends Phaser.Game {
@@ -40,7 +41,8 @@ class Main extends Phaser.Game {
     this.scene.add("preload", Preload, false);
     this.scene.add("game", GameScene, false);
     this.scene.add("test", UnitTestScene, false);
-    this.scene.start("test");
+    this.scene.add("main", MainTest, false);
+    this.scene.start("preload");
     C.gd = new GameData();
     // C.setFlag('5', true);
     }

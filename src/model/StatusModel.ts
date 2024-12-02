@@ -42,7 +42,7 @@ export class StatusModel {
 
 
 export enum StatusTypes {
-    Dead,
-    Haste,
-    Strength
+    Dead = 'Dead',
+    Haste = 'Haste',
+    Strength = 'Strength',
 }

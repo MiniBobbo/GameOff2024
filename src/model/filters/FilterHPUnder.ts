@@ -1,11 +1,10 @@
-import { EntityCombatModel } from "../EntityCombatModel";
 import { EntityModel } from "../EntityModel";
-import { FilterModel, FilterTypes } from "../FilterModel";
+import { FilterModel } from "../FilterModel";
+import { HoldingSpaceModelType } from "../HoldingSpaceModel";
 
 export class FilterHPUnder extends FilterModel {
     constructor(parent:EntityModel, value:number = 10) {
         super(parent);
-        this.Type = FilterTypes.HPUnder;
         this.Value = value;
     }
 

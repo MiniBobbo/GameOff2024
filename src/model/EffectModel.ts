@@ -1,12 +1,13 @@
 import { IBaseModel } from "../interfaces/IBaseModel";
+import { IVisualEvent } from "../visuals/VisualEvent";
 import { CriteriaModel } from "./CriteriaModel";
 import { EntityModel } from "./EntityModel";
 import { FilterModel } from "./FilterModel";
-import { HoldingSpaceCategory, HoldingSpaceModel } from "./HoldingSpaceModel";
+import { HoldingSpaceCategory, HoldingSpaceModelType } from "./HoldingSpaceModel";
 import { ModificationModel } from "./ModificationModel";
 
 export class EffectModel implements IBaseModel {
-    type:AttackType;
+    Type:HoldingSpaceModelType;
     parent:EntityModel;
 
 
@@ -33,11 +34,13 @@ export class EffectModel implements IBaseModel {
         return models;
     }
 
-    Launch(models:EntityModel[], modifications:ModificationModel[] = []) {
+    Launch(models:EntityModel[], modifications:ModificationModel[] = []):IVisualEvent[] {
         //Pick a random model from the list
         let target = models[Math.floor(Math.random() * models.length)];
         console.log(this.parent.Name + ' attacks ' + target.Name);
         target.TakeDamage(this.Strength);
+        return [{SourceID:this.parent.ID, TargetID:target.ID, Type:HoldingSpaceModelType.EffectPhysical, Value:this.Strength}];
+        
     }
 
 

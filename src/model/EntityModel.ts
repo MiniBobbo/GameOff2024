@@ -59,9 +59,18 @@ export class EntityModel {
     
     StartCombat() {
         this.CombatModel.Delay = Phaser.Math.Between(1, 5);
-        this.BaseStatusModels.forEach(element => {
-            this.CombatModel.ApplyStatus(element, this.BaseStatusModels.get(element));
-        });
+        let statuses = this.BaseStatusModels.entries();
+        // Iterate over the key-value pairs
+        for (const [key, value] of statuses) {
+            this.CombatModel.ApplyStatus(key, value);
+        }
+        // for(let i = 0; i < statuses.; i++) {
+        //     let status = statuses[i];
+        //     this.CombatModel.ApplyStatus(status, this.BaseStatusModels.get(status));
+        // }
+        // statuses.forEach(element => {
+        //     this.CombatModel.ApplyStatus(element, this.BaseStatusModels.get(element));
+        // });
     }
 
     Tick() {

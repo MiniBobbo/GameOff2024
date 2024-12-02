@@ -1,9 +1,10 @@
 import { CriteriaModel, CriteriaTypes } from "../CriteriaModel";
+import { HoldingSpaceModelType } from "../HoldingSpaceModel";
 
 export class CriteriaPercentage extends CriteriaModel {
     constructor(parent, value = .5) { 
         super(parent);
-        this.Type = CriteriaTypes.Percentage;
+        this.Type = HoldingSpaceModelType.CriteriaPercentage;
         this.Value = value;
     }
 

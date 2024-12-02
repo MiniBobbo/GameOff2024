@@ -12,6 +12,13 @@ export class C {
 
     static DebugLevel:number = 2;  
 
+    static events:Phaser.Events.EventEmitter;
+
+    static emit(event:string, ...args:any[]) {
+        if(this.events)
+            this.events.emit(event, ...args);
+    }
+
     static getID():number {
         return this.ID++;
     }
