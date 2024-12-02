@@ -1,6 +1,9 @@
+import { C } from "../C";
+import { StatusFactory } from "../factories/StatusFactory";
+import { ActionModel } from "./ActionModel";
 import { EntityCombatModel } from "./EntityCombatModel";
 import { StatusDead } from "./statuses/StatusDead";
-import { StatusModel } from "./StatusModel";
+import { StatusModel, StatusTypes } from "./StatusModel";
 
 export class EntityModel {
     ID:number = 0;
@@ -11,23 +14,22 @@ export class EntityModel {
 
     type:EntityType;
 
-    BaseStrength:number;
-    BaseAgility:number;
-    BaseIntelligence:number;
-    BaseEndurance:number;
-    BaseResistance:number;
+    BaseStrength:number = 0;
+    BaseAgility:number = 0;
+    BaseIntelligence:number = 0;
+    BaseEndurance:number = 0;
+    BaseResistance:number = 0;
 
-    BaseStatusModels:StatusModel[];
+    BaseStatusModels:Map<StatusTypes, number> = new Map<StatusTypes, number>();
 
     CombatModel:EntityCombatModel;
 
-    
+    ActionModels:ActionModel[] = [];
     
 
     constructor() {
-        this.BaseStatusModels = [];
         this.CombatModel = new EntityCombatModel(this);
-        
+        this.ID = C.getID();
     }
 
     RefreshCombatModel() {
@@ -39,11 +41,7 @@ export class EntityModel {
         this.CombatModel.Endurance = this.BaseEndurance;
         this.CombatModel.Resistance = this.BaseResistance;
         this.CombatModel.InBattle = true;
-        this.CombatModel.Statuses = [];
-        this.BaseStatusModels.forEach(element => {
-            this.CombatModel.Statuses.push(element.Clone());
-        });
-        
+        this.CombatModel.Statuses.clear();
     }
 
     toString() {
@@ -54,19 +52,15 @@ export class EntityModel {
         this.CombatModel.HP -= damage;
         if(this.CombatModel.HP < 0) {
             this.CombatModel.HP = 0;
-            this.CombatModel.Statuses.push(new StatusDead());
+            this.CombatModel.Statuses.set(StatusTypes.Dead, new StatusDead(0));
             this.CombatModel.InBattle = false;
         }
     } 
     
     StartCombat() {
-        this.CombatModel.Statuses = [];
         this.CombatModel.Delay = Phaser.Math.Between(1, 5);
         this.BaseStatusModels.forEach(element => {
-            let status = element.Clone();
-            status.AssignToEntity(this);
-            status.ApplyAction();
-            this.CombatModel.Statuses.push(status);
+            this.CombatModel.ApplyStatus(element, this.BaseStatusModels.get(element));
         });
     }
 
@@ -75,6 +69,19 @@ export class EntityModel {
             element.Tick();
         });
         this.CombatModel.Delay--;
+    }
+
+    //Go through all the actions and launch the first one that meets all the criteria.
+    TakeTurn(models:EntityModel[]) {
+        for(let i =0; i < this.ActionModels.length; i++) {
+            let action = this.ActionModels[i];
+            if(action.Valid()) {
+                if(action.Launch(models))
+                    return;
+            }
+        }
+        //We got through all the actions and none of them were valid.
+        this.CombatModel.Delay = 5;
     }
 
 }

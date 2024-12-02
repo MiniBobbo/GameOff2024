@@ -3,10 +3,10 @@ import { EntityModel } from "../EntityModel";
 import { FilterModel, FilterTypes } from "../FilterModel";
 
 export class FilterHPUnder extends FilterModel {
-    constructor(parent:EntityModel) {
+    constructor(parent:EntityModel, value:number = 10) {
         super(parent);
         this.Type = FilterTypes.HPUnder;
-        this.Value = 10;
+        this.Value = value;
     }
 
     Filter(models:EntityModel[]) : EntityModel[] {

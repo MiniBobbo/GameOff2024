@@ -2,27 +2,21 @@ import { IBaseModel } from "../interfaces/IBaseModel";
 import { CriteriaModel } from "./CriteriaModel";
 import { EntityModel } from "./EntityModel";
 import { FilterModel } from "./FilterModel";
-import { HoldingSpaceModel } from "./HoldingSpaceModel";
+import { HoldingSpaceCategory, HoldingSpaceModel } from "./HoldingSpaceModel";
 import { ModificationModel } from "./ModificationModel";
 
-export class AttackModel implements IBaseModel {
+export class EffectModel implements IBaseModel {
     type:AttackType;
-
     parent:EntityModel;
 
-    Criteria:HoldingSpaceModel[];
-    Filters:HoldingSpaceModel[];
-    Modifications:HoldingSpaceModel[];
 
     Strength:number = 0;
-    Delay:number = 5;
+    Delay:number = 10;
 
     notes: string;
+    modelCategory: HoldingSpaceCategory = HoldingSpaceCategory.Effect;
 
     constructor(parent:EntityModel) {
-        this.Criteria = [];
-        this.Filters = [];
-        this.Modifications = [];
         this.parent = parent;
     }
 
@@ -31,7 +25,7 @@ export class AttackModel implements IBaseModel {
     }
 
 
-    Valid():boolean {
+    Valid(parent: any, models: any):boolean {
         return true;
     }
 
@@ -39,7 +33,7 @@ export class AttackModel implements IBaseModel {
         return models;
     }
 
-    Launch(models:EntityModel[]) {
+    Launch(models:EntityModel[], modifications:ModificationModel[] = []) {
         //Pick a random model from the list
         let target = models[Math.floor(Math.random() * models.length)];
         console.log(this.parent.Name + ' attacks ' + target.Name);

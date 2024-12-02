@@ -1,8 +1,13 @@
-import { AttackPhysical } from "../model/attacks/AttackPhysical";
-import { EntityCombatModel } from "../model/EntityCombatModel";
+import { ActionModel } from "../model/ActionModel";
+import { CriteriaPercentage } from "../model/criteria/CriteriaPercentage";
+import { EffectPhysical } from "../model/effects/EffectPhysical";
+import { EffectStrength } from "../model/effects/EffectStrength";
 import { EntityModel } from "../model/EntityModel";
+import { FilterEnemies } from "../model/filters/FilterEnemies";
 import { FilterFriends } from "../model/filters/FilterFriends";
+import { FilterHPOverPercent } from "../model/filters/FilterHPOverPercent";
 import { FilterHPUnder } from "../model/filters/FilterHPUnder";
+import { HoldingSpaceType } from "../model/HoldingSpaceModel";
 import { StatusHaste } from "../model/statuses/StatusHaste";
 import { StatusTypes } from "../model/StatusModel";
 
@@ -40,74 +45,206 @@ export class UnitTestScene extends Phaser.Scene {
         this.e2.HP = 5;
         this.e2.RefreshCombatModel();
 
-        // this.TestHPUnderFilter();
-        // this.TestFriendsFilter();
+        // this.TestFilters();
         // this.TestRefresh();
-        this.TestAttacks();
+        // this.TestAttacks();
+        // this.TestStatuses();
         // this.TestTicks();
+        // this.TestActions();
+        this.TestEntities();
 
-        this.add.text( 10, 10, this.messages.join('\n'), { font: '16px Courier'});
+        this.add.text( 10, 10, this.messages.join('\n') ).setFont('pixel');
     }
 
-    TestFriendsFilter() {
+    TestFilters() {
+        this.messages.push('\n---Filter Tests---');
         let filter = new FilterFriends(this.p1);
         let filtered = filter.Filter([this.p1, this.p2, this.e1, this.e2]);
-        this.messages.push('Testing Friends filter: ' + (filtered.length == 2 ? 'Success' : 'Fail'));
+        this.messages.push((filtered.length == 2) + ' - Testing Friends filter: ');
+        let hpfilter = new FilterHPUnder(this.p1);
+        hpfilter.Value = 10;
+        let hpfiltered = hpfilter.Filter([this.e1, this.e2]);
+        this.messages.push((hpfiltered.length == 1) + ' - Testing HP under 10 filter: ');
+        let filterHPOverPercent = new FilterHPOverPercent(this.p1, .5);
+        let hpoverfiltered = filterHPOverPercent.Filter([this.e1, this.e2]);
+        this.messages.push((hpoverfiltered.length == 2) + ' - Testing HP over 50% filter: both');
+        this.e1.TakeDamage(5);
+        hpoverfiltered = filterHPOverPercent.Filter([this.e1, this.e2]);
+        this.messages.push((hpoverfiltered.length == 1) + ' - Testing HP over 50% filter: Damaged');
+
+
     }
 
-    TestHPUnderFilter() {
-        let filter = new FilterHPUnder(this.p1);
-        filter.Value = 10;
-        let filtered = filter.Filter([this.e1, this.e2]);
-        this.messages.push('Testing HP under 10 filter: ' + (filtered.length == 1 ? 'Success' : 'Fail'));
-    }
 
     TestRefresh() {
+        this.messages.push('\n---Refresh Tests---');
+
         this.p1.TakeDamage(20);
         this.p1.RefreshCombatModel();
         // this.messages.push(this.p1.toString());
-        this.messages.push('Testing P1 Refresh: ' + (this.p1.CombatModel.HP == 10 && this.p1.CombatModel.Statuses.length == 0 ? 'Success' : 'Fail'));
-        this.p2.BaseStatusModels.push(new StatusHaste());
-        this.p2.CombatModel.Statuses.push(new StatusHaste());
-        this.p2.CombatModel.Statuses.push(new StatusHaste());
-        this.p2.CombatModel.Statuses.push(new StatusHaste());
+        this.messages.push((this.p1.CombatModel.HP == 10 && this.p1.CombatModel.Statuses.size == 0) + ' - Testing P1 Refresh: ');
+        this.p2.BaseStatusModels.set(StatusTypes.Haste, 1);
         this.p2.RefreshCombatModel();
-        this.messages.push('Testing P2 Refresh: ' + (this.p2.CombatModel.Statuses.length == 1 ? 'Success' : 'Fail'));
+        this.p2.StartCombat();
+        this.messages.push((this.p2.CombatModel.Statuses.size == 1) + ' - Testing P2 Refresh:');
+
 
     }
 
     TestAttacks() {
         let success = true;
-        let am = new AttackPhysical(this.p1);
+        this.e1.RefreshCombatModel();
+        let am = new EffectPhysical(this.p1);
         am.Strength = 6;
         am.Launch([this.e1]);
-        this.messages.push('---Attack Tests---');
-        if(this.e1.CombatModel.HP != 4) {
-            success = false;
-            this.messages.push('Testing Physical Attack: ' + 'Entity not at 4 HP');
-        }
+        this.messages.push('\n---Effect Tests---');
+        this.messages.push((this.e1.CombatModel.HP == 4) + ' - Testing strength 6 attack.');
         am.Launch([this.e1]);
-        if(this.e1.CombatModel.HP != 0 || this.e1.CombatModel.Statuses.filter((status) => status.Type == StatusTypes.Dead).length == 0) {
-            success = false;
-            this.messages.push('Testing Physical Attack: ' + 'Entity not at 0 HP');
-        }
+        this.messages.push((this.e1.CombatModel.HP == 0 && this.e1.CombatModel.Statuses.has(StatusTypes.Dead)) + ' - Enemy dead test.');
         this.e1.RefreshCombatModel();
 
-        am.Filters.push
-
-        if(success) 
-            this.messages.push('All Tests: ' + success + '\n');
-        
+        let strength = new EffectStrength(this.p1);
+        this.messages.push((strength.Filter([this.p1]).length == 1) + ' - Testing strength filter.');
+        strength.Launch([this.p1]);
+        this.messages.push((strength.Filter([this.p1]).length == 0) + ' - Testing strength filter after effect.');
+        this.messages.push((strength.Filter([this.p1]).length == 0) + ' - Testing strength effect applied status.');
 
     }
 
     TestTicks() {
+        this.messages.push('\n---Tick Tests---');
+
         this.p1.RefreshCombatModel();
         this.p1.StartCombat();
-        this.messages.push('Testing P1 Start Combat Delay: ' + (this.p1.CombatModel.Delay > 0 ? 'Success' : 'Fail'));
+        this.messages.push((this.p1.CombatModel.Delay > 0) + ' - Testing P1 Start Combat Delay: ');
         this.p1.CombatModel.Delay = 5;
         this.p1.Tick();
-        this.messages.push('Testing P1 Tick Command: ' + (this.p1.CombatModel.Delay == 4 ? 'Success' : 'Fail'));
+        this.messages.push((this.p1.CombatModel.Delay == 4) + ' - Testing P1 Tick Command: ');
+
+        //Test if the attack creates 10 delay on the attacker.
+        let am = new EffectPhysical(this.p1);
+        am.Strength = 0;
+        am.Launch([this.e1]);
+        this.messages.push((this.p1.CombatModel.Delay == 10) + ' - Testing P1 Attack Delay: ');
+
+        
+ 
+    }
+
+    TestStatuses() {
+        this.messages.push('\n---Status Tests---');
+        let success = true;
+        this.p1.RefreshCombatModel();
+        this.p1.StartCombat();
+        this.p1.CombatModel.ApplyStatus(StatusTypes.Haste, 1);
+        this.p1.CombatModel.ApplyStatus(StatusTypes.Strength, 1);
+
+        this.messages.push(`${this.p1.CombatModel.Strength == this.p1.BaseStrength + 1} - Testing Strength Status:`);
+        this.messages.push(`${this.p1.CombatModel.Agility == this.p1.BaseAgility + 1} - Testing Haste Status:`);
+        this.messages.push(`${this.p1.CombatModel.Statuses.size == 2} - Testing Status Count:`);
+
+        //Tick 20 times and the strength status should be removed.
+        for(let i = 0; i < 20;i++)
+            this.p1.Tick();
+        this.messages.push(`${this.p1.CombatModel.Strength == this.p1.BaseStrength} - Testing Strength Status Expires: `);
+
+
+        // this.messages.push(`All Status tests: ${success}`);
+
+    }
+
+    TestActions() {
+        this.messages.push('\n---Action Tests---');
+        let action = new ActionModel();
+        // action.Filters.push(new HoldingSpaceModel(HoldingSpaceCategory.Filter));
+        this.messages.push(`${!action.Valid()} - Testing Invalid Action: `);
+        action.AddEffect(new EffectPhysical(this.p1));
+        this.messages.push(`${action.Valid()} - Testing Add Effect: `);
+        //Test adding an empty required filter.  This should not be valid.
+        action.AddFilter(null, HoldingSpaceType.Required);
+        this.messages.push(`${!action.Valid()} - Testing Missing Required Filter Action: `);
+        this.messages.push(`${!action.AllRequiredHoldingSpaces} - Testing Missing Required Filter Action Check: `);
+
+        //Test adding a filter to the Action.  This should make this action valid.
+        action.Filters[0].AddModel(new FilterFriends(this.p1));
+        this.messages.push(`${action.Valid()} - Testing Filled Required Filter Action: `);
+
+
+        //Test adding an optional filter.  This action should still be valid.
+        action.AddFilter(null);
+        this.messages.push(`${action.Valid()} - Testing Empty Optional Filter Action: `);
+
+        //Test adding a required filter with the model directly in the function.  This action should be valid.
+        action.AddFilter(new FilterFriends(this.p1), HoldingSpaceType.Required);
+        this.messages.push(`${action.Valid()} - Testing Filled Required Filter Added Action: `);
+
+        //Test adding a required criteria with no model.  This should be invalid
+        action.AddCriteria(null, HoldingSpaceType.Required);
+        this.messages.push(`${!action.Valid()} - Testing Missing Required Criteria Action: `);
+        this.messages.push(`${!action.AllRequiredHoldingSpaces} - Testing Missing Required Criteria Action Check: `);
+
+        //Test filling in the missing criteria.  This should be valid.
+        action.Criteria[0].AddModel(new CriteriaPercentage(this.p1, 100));
+        this.messages.push(`${action.Valid()} - Testing Filled Required Criteria Added Action: `);
+
+        //Test adding an optional criteria.  This action should be valid.
+        action.AddCriteria(null, HoldingSpaceType.Optional);
+        this.messages.push(`${action.Valid()} - Testing Empty Optional Criteria Action: `);
+
+        //Test adding a required criteria  with the model directly in the function.  This action should be valid.
+        action.AddCriteria(new CriteriaPercentage(this.p1, 100), HoldingSpaceType.Required);
+        this.messages.push(`${action.Valid()} - Testing Filled Required Criteria Added Action: `);
+
+        //Create another action and test the launch.  If everything worked the e2 enemy should be damaged.
+        let action2 = new ActionModel();
+        action2.AddEffect(new EffectPhysical(this.p1));
+        action2.AddFilter(new FilterEnemies(this.p1));
+        action2.AddFilter(new FilterHPUnder(this.p1, 10));
+
+        this.e1.RefreshCombatModel();
+        this.e2.RefreshCombatModel();
+        this.p1.RefreshCombatModel();
+        this.p2.RefreshCombatModel();
+        
+        action2.Launch([this.p1, this.p2, this.e1, this.e2]);
+        this.messages.push(`${this.e2.CombatModel.HP != this.e2.HP} - Testing Action Launch: `);
+        this.e2.RefreshCombatModel();
+    }
+
+    TestEntities() {
+        this.messages.push('\n---Entity Tests---');
+
+        this.p1.RefreshCombatModel();
+        this.p1.StartCombat();
+        this.p2.RefreshCombatModel();
+        this.p2.StartCombat();
+        this.e1.RefreshCombatModel();
+        this.e1.StartCombat();
+        this.e2.RefreshCombatModel();
+        this.e2.StartCombat();
+
+        //Create two Actions for the player.  One that attacks enemies over 50% health and one that buffs friends over 50% health.
+        //Player 1 should be below 50% health and should not be targetted.
+        this.p1.TakeDamage(8);
+        let p1a1 = new ActionModel();
+        p1a1.AddEffect(new EffectPhysical(this.p1, 5));
+        p1a1.AddFilter(new FilterEnemies(this.p1));
+        p1a1.AddFilter(new FilterHPOverPercent(this.p1, .5));
+        let p1a2 = new ActionModel();
+        p1a2.AddEffect(new EffectStrength(this.p1, 1));
+        p1a2.AddFilter(new FilterFriends(this.p1));
+        p1a2.AddFilter(new FilterHPOverPercent(this.p1, .5));
+
+        this.p1.ActionModels.push(p1a1);
+        this.p1.ActionModels.push(p1a2);
+
+        this.p1.TakeTurn([this.p1, this.p2, this.e1]);
+        //After the first turn, the player should have attacked the enemy.
+        this.messages.push(`${this.e1.CombatModel.HP != this.e1.HP} - Player Attacked Enemy: `);
+
+        this.p1.TakeTurn([this.p1, this.p2, this.e1]);
+        //After the second turn, the player should have buffed the friend.
+        this.messages.push(`${this.p2.CombatModel.Strength != this.p2.BaseStrength} - Player Buffed Friend: `);
 
 
     }

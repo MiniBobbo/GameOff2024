@@ -66,6 +66,7 @@ export class Preload extends Phaser.Scene {
         this.load.json('level', 'levels.ldtk');
         this.load.multiatlas('atlas', 'atlas.json');
         this.load.image('pointer', 'pointer.png');
+        this.load.font('pixel', 'munro.ttf', 'truetype');
     }
 
 

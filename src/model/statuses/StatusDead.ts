@@ -1,8 +1,9 @@
+import { StatusFactory } from "../../factories/StatusFactory";
 import { StatusModel, StatusTypes } from "../StatusModel";
 
 export class StatusDead extends StatusModel {
-    constructor() {
-        super();
+    constructor(value?:number) {
+        super(0, 0);
         this.Type = StatusTypes.Dead;
     }
 
@@ -15,6 +16,6 @@ export class StatusDead extends StatusModel {
     }
 
     Clone() {
-        return new StatusDead();
+        return StatusFactory.CreateStatus(this.Type, this.Value, 0);
     }
 }

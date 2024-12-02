@@ -7,12 +7,16 @@ export class StatusModel {
 
     parent:EntityModel;
 
+    constructor(value:number, ticks:number = 20) {
+        this.Value = value;
+        this.Ticks = ticks;
+    }
+
     Tick() {
         this.ApplyTick();
         this.Ticks--;
         if(this.Ticks <= 0) {
-            this.ApplyEnd();
-            
+            this.End();
         }
     }
 
@@ -25,22 +29,20 @@ export class StatusModel {
 
     }
 
-    ApplyEnd() {
+    End() {
+        this.parent.CombatModel.RemoveStatus(this.Type);
 
     }
 
-    ApplyAction() {
+    Start() {
         
     }
 
-    Clone() {
-        return new StatusModel();
-    }
-    
 }
 
 
 export enum StatusTypes {
     Dead,
-    Haste
+    Haste,
+    Strength
 }

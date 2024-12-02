@@ -1,24 +1,19 @@
 import { StatusModel, StatusTypes } from "../StatusModel";
 
 export class StatusHaste extends StatusModel {
-    constructor(value:number = 1) {
-        super();
+    constructor(value:number = 1, ticks:number = 20) {
+        super(value, ticks);
         this.Type = StatusTypes.Haste;
         this.Value = value;
         this.Ticks = 30;
     }
 
-
-    Tick() {
-        this.ApplyTick();
-        this.Ticks--;
-        if(this.Ticks <= 0) {
-            this.ApplyEnd();
-        }
+    Start(): void {
+        this.parent.CombatModel.Agility += this.Value;
     }
 
-    ApplyAction() {
-        
+    End(): void {
+        this.parent.CombatModel.Agility -= this.Value;
     }
 
     Clone() {
