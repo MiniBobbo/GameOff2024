@@ -33,6 +33,41 @@ export class Engine {
         activeEntities.forEach(entity => {
             entity.TakeTurn(this.Entities);
         });
+
+        this.CheckVictory(); 
+    }
+
+    CheckVictory() {
+        //Get all the entities on side 1
+        let players = this.Entities.filter(entity => entity.Side == 1);
+        let defeated = true;
+        //Check if all the players are defeated
+        players.forEach(entity => {
+            if(entity.CombatModel.InBattle) {
+                defeated = false;
+            }
+        });
+        if(defeated) {
+            this.events.emit(EngineEvents.BattleEnd, 2);
+            return;
+        } 
+
+        //Get all the entities not on side 1
+
+        let enemies = this.Entities.filter(entity => entity.Side != 1);
+        defeated = true;
+        //Check if all the enemies are defeated
+        enemies.forEach(entity => {
+            if(entity.CombatModel.InBattle) {
+                defeated = false;
+            }
+        });
+        if(defeated) {
+            this.events.emit(EngineEvents.BattleEnd, 1);
+            return;
+        }
+
+        
     }
 
     RefreshEntities() { 

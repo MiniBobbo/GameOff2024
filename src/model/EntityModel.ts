@@ -1,5 +1,6 @@
 import { C } from "../C";
 import { StatusFactory } from "../factories/StatusFactory";
+import { IVisualEvent } from "../visuals/VisualEvent";
 import { ActionModel } from "./ActionModel";
 import { EntityCombatModel } from "./EntityCombatModel";
 import { StatusDead } from "./statuses/StatusDead";
@@ -74,19 +75,26 @@ export class EntityModel {
     }
 
     Tick() {
-        this.CombatModel.Statuses.forEach(element => {
-            element.Tick();
-        });
-        this.CombatModel.Delay--;
+        if(this.CombatModel.InBattle) {
+            this.CombatModel.Statuses.forEach(element => {
+                element.Tick();
+            });
+            this.CombatModel.Delay--;
+        }
     }
 
     //Go through all the actions and launch the first one that meets all the criteria.
-    TakeTurn(models:EntityModel[]) {
+    TakeTurn(models:EntityModel[]):IVisualEvent[] {
         for(let i =0; i < this.ActionModels.length; i++) {
             let action = this.ActionModels[i];
             if(action.Valid()) {
-                if(action.Launch(models))
+                let ve = action.Launch(models); 
+                if(ve.length > 0) {
+                    ve.forEach(element => {
+                        C.emit('VisualEvent', element);
+                    });
                     return;
+                }
             }
         }
         //We got through all the actions and none of them were valid.

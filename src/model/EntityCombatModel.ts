@@ -18,6 +18,7 @@ export class EntityCombatModel {
     Statuses:Map<StatusTypes, StatusModel> = new Map<StatusTypes, StatusModel>();
 
     InBattle:boolean = false;
+    Targetable:boolean = true;
 
     Delay:number = 0;
 
