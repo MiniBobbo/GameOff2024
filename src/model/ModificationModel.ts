@@ -11,6 +11,10 @@ export class ModificationModel implements IBaseModel {
     Tick() {
 
     }
+    
+    toJson(): string {
+        return JSON.stringify({Type:this.Type, Value:this.Value,Category:this.modelCategory});
+    }
 
     Apply(parent: any, models: any): boolean {
 

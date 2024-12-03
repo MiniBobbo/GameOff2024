@@ -31,6 +31,7 @@ export class EntityModel {
     constructor() {
         this.CombatModel = new EntityCombatModel(this);
         this.ID = C.getID();
+        this.BaseStatusModels = new Map<StatusTypes, number>();
     }
 
     RefreshCombatModel() {
@@ -101,6 +102,52 @@ export class EntityModel {
         this.CombatModel.Delay = 5;
     }
 
+
+    ToJSON():string {
+        function customReplacer(key: string, value: any) {
+            if (key === 'parent') {
+                return undefined;
+            }
+            return value;
+        }
+
+        // Assuming `obj` is the object you want to stringify
+        const jsonString = JSON.stringify(this, customReplacer, 2);
+        console.log(jsonString);
+
+        return jsonString;
+
+    }
+
+    static FromJSON(json:string):EntityModel { 
+        let obj = JSON.parse(json);
+        let entity = new EntityModel();
+        entity.ID = obj.ID;
+        entity.Side = obj.Side;
+        entity.Name = obj.Name;
+        entity.HP = obj.HP;
+        entity.AP = obj.AP;
+        entity.BaseStrength = obj.BaseStrength;
+        entity.BaseAgility = obj.BaseAgility;
+        entity.BaseIntelligence = obj.BaseIntelligence;
+        entity.BaseEndurance = obj.BaseEndurance;
+        entity.BaseResistance = obj.BaseResistance;
+        // entity.BaseStatusModels = obj.BaseStatusModels;
+        if(obj.BaseStatusModels) {
+        obj.BaseStatusModels.forEach(element => {
+            
+        });
+    }
+        obj.ActionModels.forEach(element => {
+            let am = ActionModel.FromJson(element, entity);
+            entity.ActionModels.push(am);
+        });;
+
+
+        entity.RefreshCombatModel();
+        
+        return entity;
+    }
 }
 
 export enum EntityType {

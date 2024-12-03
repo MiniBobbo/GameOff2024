@@ -13,6 +13,10 @@ export class CriteriaModel implements IBaseModel{
         this.parent = parent;
     }
 
+    toJson(): string {
+        return JSON.stringify({Type:this.Type, Value:this.Value,Category:this.modelCategory});
+   }
+
     AssignToModel(model:EntityModel) {
         this.parent = model;
     }

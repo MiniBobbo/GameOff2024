@@ -71,13 +71,13 @@ export class MainTest extends Phaser.Scene {
 
         let p1Visual = new VisualEntity(this.p1, this);
         let p2Visual = new VisualEntity(this.p2, this);
-        let e1Visual = new VisualEntity(this.e1, this);
-        let e2Visual = new VisualEntity(this.e2, this);
+        let e1Visual = new VisualEntity(this.e1, this, true);
+        let e2Visual = new VisualEntity(this.e2, this, true);
 
-        p1Visual.SetPosition(10, 100);
-        p2Visual.SetPosition(10, 200);
-        e1Visual.SetPosition(400, 100);
-        e2Visual.SetPosition(400, 200);
+        p1Visual.SetPosition(300, 300);
+        p2Visual.SetPosition(300, 400);
+        e1Visual.SetPosition(500, 300);
+        e2Visual.SetPosition(500, 400);
 
 
         this.visuals.push(p1Visual, p2Visual, e1Visual, e2Visual);

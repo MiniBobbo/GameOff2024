@@ -8,7 +8,7 @@ export class EffectPhysical extends EffectModel {
     constructor(parent:EntityModel, strength:number = 5) {
         super(parent);
         this.Type = HoldingSpaceModelType.EffectPhysical;
-        this.Strength = strength;
+        this.Value = strength;
     }
 
     Filter(models:EntityModel[]) : EntityModel[] {
@@ -26,7 +26,5 @@ export class EffectPhysical extends EffectModel {
         return [{SourceID:this.parent.ID, TargetID:target.ID, Type:HoldingSpaceModelType.EffectPhysical, Value:damage}];
     }
 
-    Valid(): boolean {
-        return true;
-    }
+
 }

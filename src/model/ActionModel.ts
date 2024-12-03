@@ -35,6 +35,7 @@ export class ActionModel {
         this.CheckHoldingSpaces();
     }
 
+
     AssignToEntity(parent:EntityModel) {
         this.parent = parent;
     }
@@ -126,6 +127,7 @@ export class ActionModel {
         } else {
             this.notes = 'This action was invalid'
             return [];
+
         }
     }
 
@@ -145,5 +147,62 @@ export class ActionModel {
         });
         if(!this.Effect.BaseModel)
             this.AllRequiredHoldingSpaces = false;
+    }
+
+    ToJson():string {
+        // let criteria = [];
+        // let filters = [];
+        // let mods = [];
+        // this.Criteria.forEach(element => {
+        //     criteria.push(element.toJson());
+        // });
+        // this.Filters.forEach(element => {
+        //     filters.push(element.toJson());
+        // });
+        // this.Modifications.forEach(element => {
+        //     mods.push(element.toJson());
+        // });
+        // let json = JSON.stringify({Criteria:criteria, Filters:filters, Modifications:mods, Effect:this.Effect.toJson()});
+
+        function customReplacer(key: string, value: any) {
+            if (key === 'parent') {
+                return undefined;
+            }
+            return value;
+        }
+
+        // Assuming `obj` is the object you want to stringify
+        const jsonString = JSON.stringify(this, customReplacer, 2);
+        console.log(jsonString);
+
+        return jsonString;
+
+    }
+
+    static FromJson(json:any, parent:EntityModel):ActionModel { 
+        let obj = json;
+        let am = new ActionModel();
+        obj.Criteria.forEach(element => {
+            if(element.BaseModel)
+                am.CreateCriteria(element.BaseModel.Type, element.BaseModel.Value, element.CriteriaNumber);
+        });
+        obj.Filters.forEach(element => {
+            if(element.BaseModel)
+                am.CreateFilter(element.BaseModel.Type, element.BaseModel. Value, element.FilterNumber);
+        });
+        // obj.Modifications.forEach(element => {
+        //     if(element.BaseModel)
+        //         am.C(ActionFactory.CreateAction(parent, element.Type, element.Value));
+        // });
+        if(obj.Effect.BaseModel)
+            am.CreateEffect(obj.Effect.BaseModel.Type, obj.Effect.BaseModel.Value);
+        // am.Criteria = obj.Criteria;
+        // am.Filters = obj.Filters;
+        // am.Modifications = obj.Modifications;
+        // am.Effect = obj.Effect;
+        // am.AllRequiredHoldingSpaces = obj.AllRequiredHoldingSpaces;
+        // am.notes = obj.notes
+
+        return am;
     }
 }

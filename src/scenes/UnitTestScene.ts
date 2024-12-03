@@ -23,19 +23,22 @@ export class UnitTestScene extends Phaser.Scene {
 
 
     create() {
-        this.ResetEntities();
-        this.TestVisualEvents();
+        // this.ResetEntities();
+        // this.TestVisualEvents();
         // this.TestFilters();
         // this.TestRefresh();
         // this.TestAttacks();
-        this.TestDamageCalculations();
-        this.TestStatuses();
-        this.TestTicks();
-        this.TestActions();
+        // this.TestJSON();
+        // this.TestDamageCalculations();
+        // this.TestStatuses();
+        // this.TestTicks();
+        // this.TestActions();
         this.TestEntities();
 
-        this.add.text( 10, 10, this.messages.join('\n'), {fontFamily:'Munro', color:'#ff0000', fontSize: 16});
+        let t = this.add.text( 10, 10, this.messages.join('\n'), {fontFamily:'Munro', color:'#ff0000', fontSize: 16});
 
+        this.input.keyboard.on('keydown-S', ()=>{ t.y -= 10; });
+        this.input.keyboard.on('keydown-W', ()=>{ t.y += 10; });
         // this.input.on('pointerdown', ()=>  {
         //     this.add.text( 10, 10, 'New Text', {fontFamily:'Munro', color:'#ff0000', fontSize: 24});
         // }, this);
@@ -91,6 +94,31 @@ export class UnitTestScene extends Phaser.Scene {
 
     }
 
+    TestJSON() {
+        this.ResetEntities();
+        this.messages.push('\n---JSON Tests---');
+        let entityJson = '';
+        let success = true;
+        try {
+            let action = new ActionModel();
+            action.AddEffect(new EffectPhysical(this.p1));
+            var json = action.ToJson();
+            var a2 = JSON.parse(json);
+    
+            this.p1.ActionModels.push(action);
+            entityJson = this.p1.ToJSON();
+    
+        } catch(e) {
+            success = false;
+        }
+        this.messages.push(`${success} - Testing JSON serialization: `);
+
+        let newP = EntityModel.FromJSON(entityJson);
+        this.messages.push(`${newP.Name == this.p1.Name} - Testing JSON deserialization: `);
+
+
+    }
+
 
     TestRefresh() {
         this.messages.push('\n---Refresh Tests---');
@@ -111,7 +139,7 @@ export class UnitTestScene extends Phaser.Scene {
         let success = true;
         this.e1.RefreshCombatModel();
         let am = new EffectPhysical(this.p1);
-        am.Strength = 6;
+        am.Value = 6;
         am.Launch([this.e1]);
         this.messages.push('\n---Effect Tests---');
         this.messages.push((this.e1.CombatModel.HP == 4) + ' - Testing strength 6 attack.');
@@ -139,7 +167,7 @@ export class UnitTestScene extends Phaser.Scene {
 
         //Test if the attack creates 10 delay on the attacker.
         let am = new EffectPhysical(this.p1);
-        am.Strength = 0;
+        am.Value = 0;
         am.Launch([this.e1]);
         this.messages.push((this.p1.CombatModel.Delay == 10) + ' - Testing P1 Attack Delay: ');
     }
@@ -275,6 +303,13 @@ export class UnitTestScene extends Phaser.Scene {
 
     TestEntities() {
         this.messages.push('\n---Entity Tests---');
+
+        this.ResetEntities();
+        this.p1.BaseStatusModels.set(StatusTypes.Haste, 1);
+        let json = this.p1.ToJSON();
+        let newP = EntityModel.FromJSON(json);
+
+        this.p1 = newP;
 
         this.p1.RefreshCombatModel();
         this.p1.StartCombat();

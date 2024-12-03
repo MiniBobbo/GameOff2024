@@ -3,6 +3,9 @@ import { IBaseModel } from "../interfaces/IBaseModel";
 export class HoldingSpaceModel {
     Category:HoldingSpaceCategory;
     Locked:boolean = true;
+    type:HoldingSpaceType = HoldingSpaceType.Optional;
+    BaseModel:IBaseModel;
+
     constructor(category:HoldingSpaceCategory, baseModel?:IBaseModel, type:HoldingSpaceType = HoldingSpaceType.Optional) {
         if(baseModel)
             this.BaseModel = baseModel;
@@ -11,8 +14,6 @@ export class HoldingSpaceModel {
         this.Category = category;
     }
 
-    type:HoldingSpaceType = HoldingSpaceType.Optional;
-    BaseModel:IBaseModel;
 
     AddModel(model:IBaseModel, lock:boolean = false) {
         if(model.modelCategory != this.Category) {
@@ -26,6 +27,11 @@ export class HoldingSpaceModel {
 
     toString():string {
         return `T:${this.type}, BaseModel: ${this.BaseModel.Type}`;
+    }
+
+    toJson() {
+        return JSON.stringify(this);
+        // return JSON.stringify({Category:this.Category, Locked:this.Locked, type:this.type, BaseModel:this.BaseModel ? this.BaseModel.toJson(): ""});
     }
 }
 

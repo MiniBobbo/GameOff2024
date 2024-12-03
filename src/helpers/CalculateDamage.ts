@@ -5,7 +5,7 @@ import { HoldingSpaceModelType } from "../model/HoldingSpaceModel";
 export class CalculateDamage {
     static Calculate(effect:EffectModel, defender:EntityModel):number {
         //The basic equation is attacker strength + effect strength - defender endurance
-        let damage = effect.Strength + effect.parent.CombatModel.Strength;
+        let damage = effect.Value + effect.parent.CombatModel.Strength;
         switch(effect.Type) {
 
             case HoldingSpaceModelType.EffectPhysical:

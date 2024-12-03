@@ -16,6 +16,10 @@ export class FilterModel implements IBaseModel {
         this.parent = parent;
     }   
 
+    toJson(): string {
+        return JSON.stringify({Type:this.Type, Value:this.Value,Category:this.modelCategory});
+    }
+
     Valid(parent: any, models: any): boolean {
         return true;
     }

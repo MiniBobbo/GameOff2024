@@ -11,7 +11,7 @@ export class EffectModel implements IBaseModel {
     parent:EntityModel;
 
 
-    Strength:number = 0;
+    Value:number = 0;
     Delay:number = 10;
 
     notes: string;
@@ -38,8 +38,8 @@ export class EffectModel implements IBaseModel {
         //Pick a random model from the list
         let target = models[Math.floor(Math.random() * models.length)];
         console.log(this.parent.Name + ' attacks ' + target.Name);
-        target.TakeDamage(this.Strength);
-        return [{SourceID:this.parent.ID, TargetID:target.ID, Type:HoldingSpaceModelType.EffectPhysical, Value:this.Strength}];
+        target.TakeDamage(this.Value);
+        return [{SourceID:this.parent.ID, TargetID:target.ID, Type:HoldingSpaceModelType.EffectPhysical, Value:this.Value}];
         
     }
 

@@ -26,6 +26,12 @@ export class EntityCombatModel {
         this.parent = parent;
     }
 
+    toJson() {
+        let parent = this.parent;
+        this.parent = null;
+        JSON.stringify(this);
+        this.parent = parent;
+    }
 
     ApplyStatus(type:StatusTypes, value:number, ticks:number = 20, stackable:boolean = false) {
         if(!this.Statuses.has(type) && !stackable) {
