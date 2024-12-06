@@ -3,6 +3,7 @@ import { ActionModel } from "../model/ActionModel";
 import { EntityModel } from "../model/EntityModel";
 import { HoldingSpaceModelType } from "../model/HoldingSpaceModel";
 import { StatusTypes } from "../model/StatusModel";
+import { VisualEngine, VisualEngineState } from "../visuals/VisualEngine";
 import { VisualEntity } from "../visuals/VisualEntity";
 import { IVisualEvent } from "../visuals/VisualEvent";
 
@@ -15,10 +16,12 @@ export class MainTest extends Phaser.Scene {
     visuals:VisualEntity[] = [];
 
     e:Engine;
+    ve:VisualEngine;
     
     text:Phaser.GameObjects.Text;
 
     TickCount:number = 0;
+
 
     create() {
 
@@ -80,9 +83,8 @@ export class MainTest extends Phaser.Scene {
         e2Visual.SetPosition(500, 400);
 
 
-        this.visuals.push(p1Visual, p2Visual, e1Visual, e2Visual);
 
-        this.text = this.add.text(10, 400, 'Hello World', { fontFamily: 'munro', fontSize: 24, color: '#00ff00' });
+        this.text = this.add.text(10, 10, 'Hello World', { fontFamily: 'munro', fontSize: 12, color: '#00ff00' });
         this.e = new Engine(this);
         this.e.AddEntity(this.p1);
         this.e.AddEntity(this.p2);
@@ -94,11 +96,16 @@ export class MainTest extends Phaser.Scene {
         this.p1.CombatModel.Delay = 1;
         this.p2.CombatModel.Delay = 1;
 
-        this.RefreshVisuals();
+        this.ve = new VisualEngine(this, this.e);
+        this.ve.AddVisuals([p1Visual, p2Visual, e1Visual, e2Visual]);
+
 
         this.input.on('pointerdown', () => {
-            this.e.Tick();
-            this.RefreshVisuals();
+            if(this.ve.State == VisualEngineState.Paused) 
+                this.ve.ChangeState(VisualEngineState.Playing);
+            else if (this.ve.State == VisualEngineState.Playing) 
+                this.ve.ChangeState(VisualEngineState.Paused);
+
         });
 
         this.events.on('VisualEvent', (ve:IVisualEvent) => {
@@ -109,17 +116,16 @@ export class MainTest extends Phaser.Scene {
                 let source = this.e.Entities.find(entity => entity.ID === ve.SourceID);
                 let target = this.e.Entities.find(entity => entity.ID === ve.TargetID);
                 this.text.text += `\nSource: ${source.Name}, Target: ${target.Name}, Type: ${ve.Type}, Value: ${ve.Value}`;
-        });
 
-        this.events.on(EngineEvents.BattleEnd, (side:number) => {
-            this.input.off('pointerdown');
-            this.text.setText(`Battle Ended, Side ${side} Wins!`);
+                this.ve.VisualEventQueue.push(ve);
         });
     }
 
-    RefreshVisuals() {  
-        this.visuals.forEach(visual => {
-            visual.Refresh();
-        });
+    update(time: number, delta: number): void {
+        this.text.text = `Visual Engine State: ${this.ve.State}`;
+        
     }
+
+
+
 }

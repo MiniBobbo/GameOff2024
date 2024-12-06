@@ -59,7 +59,7 @@ export class Preload extends Phaser.Scene {
             percentText.destroy();
             assetText.destroy();
             //@ts-ignore
-            this.scene.start('test');
+            this.scene.start('main');
         }, this);
     
         this.load.setBaseURL('./assets/')
