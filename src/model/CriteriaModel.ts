@@ -12,6 +12,9 @@ export class CriteriaModel implements IBaseModel{
     constructor(parent?:EntityModel) {
         this.parent = parent;
     }
+    Export(): string {
+        return `${this.Type},${this.Value},${this.modelCategory}`;
+    }
 
     toJson(): string {
         return JSON.stringify({Type:this.Type, Value:this.Value,Category:this.modelCategory});

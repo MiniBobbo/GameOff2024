@@ -90,6 +90,9 @@ export class UnitTestScene extends Phaser.Scene {
         this.e1.TakeDamage(5);
         hpoverfiltered = filterHPOverPercent.Filter([this.e1, this.e2]);
         this.messages.push((hpoverfiltered.length == 1) + ' - Testing HP over 50% filter: Damaged');
+        let ex = filterHPOverPercent.Export();
+        this.messages.push((ex) + ' - Testing HP over 50% filter Export: ');
+
 
 
     }
@@ -186,9 +189,6 @@ export class UnitTestScene extends Phaser.Scene {
         this.messages.push(`${result[0].TargetID == 200} - Testing Visual Event Target ID: `);
         this.messages.push(`${result[0].Type == HoldingSpaceModelType.EffectPhysical} - Testing Visual Event Type: `);
         this.messages.push(`${result[0].Value == 5} - Testing Visual Event Value: `);
-
-
-
     }
 
     TestStatuses() {
@@ -305,7 +305,7 @@ export class UnitTestScene extends Phaser.Scene {
         this.messages.push('\n---Entity Tests---');
 
         this.ResetEntities();
-        this.p1.BaseStatusModels.set(StatusTypes.Haste, 1);
+        this.p1.AddBaseStatusModel(StatusTypes.Haste, 1);
         let json = this.p1.ToJSON();
         let newP = EntityModel.FromJSON(json);
 
@@ -319,6 +319,9 @@ export class UnitTestScene extends Phaser.Scene {
         this.e1.StartCombat();
         this.e2.RefreshCombatModel();
         this.e2.StartCombat();
+
+        this.messages.push(`${this.p1.CombatModel.Statuses.has(StatusTypes.Haste)} - JSON Parsing got the status models: `);
+
 
         //Create two Actions for the player.  One that attacks enemies over 50% health and one that buffs friends over 50% health.
         //Player 1 should be below 50% health and should not be targetted.

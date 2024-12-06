@@ -20,6 +20,9 @@ export class EffectModel implements IBaseModel {
     constructor(parent:EntityModel) {
         this.parent = parent;
     }
+    Export(): string {
+        return `${this.Type},${this.Value},${this.modelCategory},${this.Delay}`;
+    }
 
     Apply(parent: any, models: any): boolean {
         return true;

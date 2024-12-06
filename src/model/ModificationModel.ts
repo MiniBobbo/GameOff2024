@@ -1,7 +1,8 @@
 import { IBaseModel } from "../interfaces/IBaseModel";
+import { BaseModel } from "./BaseModel";
 import { HoldingSpaceCategory, HoldingSpaceModelType } from "./HoldingSpaceModel";
 
-export class ModificationModel implements IBaseModel {
+export class ModificationModel extends BaseModel {
     modelCategory: HoldingSpaceCategory = HoldingSpaceCategory.Modification;
     notes: string;
     Type:HoldingSpaceModelType;
@@ -23,5 +24,6 @@ export class ModificationModel implements IBaseModel {
     Valid(parent: any, models: any): boolean {
         throw new Error("Method not implemented.");
     }
+
 
 }

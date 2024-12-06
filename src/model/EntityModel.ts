@@ -23,6 +23,8 @@ export class EntityModel {
 
     BaseStatusModels:Map<StatusTypes, number> = new Map<StatusTypes, number>();
 
+    BaseStatusModelString:{StatusTypes, number}[] = [];
+
     CombatModel:EntityCombatModel;
 
     ActionModels:ActionModel[] = [];
@@ -102,8 +104,17 @@ export class EntityModel {
         this.CombatModel.Delay = 5;
     }
 
+    AddBaseStatusModel(status:StatusTypes, value:number) {
+        this.BaseStatusModels.set(status, value);
+    }
+
 
     ToJSON():string {
+        
+        this.BaseStatusModels.forEach((value, key) => {
+            this.BaseStatusModelString.push({ StatusTypes: key, number: value });
+        });
+
         function customReplacer(key: string, value: any) {
             if (key === 'parent') {
                 return undefined;
@@ -117,6 +128,10 @@ export class EntityModel {
 
         return jsonString;
 
+    }
+
+    Export():string {
+        return "";
     }
 
     static FromJSON(json:string):EntityModel { 
@@ -133,9 +148,9 @@ export class EntityModel {
         entity.BaseEndurance = obj.BaseEndurance;
         entity.BaseResistance = obj.BaseResistance;
         // entity.BaseStatusModels = obj.BaseStatusModels;
-        if(obj.BaseStatusModels) {
-        obj.BaseStatusModels.forEach(element => {
-            
+        if(obj.BaseStatusModelString ) {
+            obj.BaseStatusModelString.forEach(element => {
+            entity.BaseStatusModels.set(element.StatusTypes, element.number);
         });
     }
         obj.ActionModels.forEach(element => {
